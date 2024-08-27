@@ -1,13 +1,23 @@
 spring:
   quartz:
     job-store-type: jdbc
-#    initialize-schema: never
-    initialize-schema: always
+    
+    jdbc:
+      #    initialize-schema: never
+      initialize-schema: always
+    properties:
+      org:
+        quartz:
+          jobStore:
+            dataSource: quartzDataSource
+            tablePrefix: QRTZ_
+            # In a distributed environment, it’s important to ensure that multiple instances of your application don’t execute the same job concurrently.
+            # Clustering allows Quartz to manage jobs across multiple instances, ensuring only one instance runs a given job at a time.
+            isClustered: true
 
-quartz:
-  properties:
-    org:
-      quartz:
-        jobStore:
-          class: org.quartz.impl.jdbcjobstore.JobStoreTX
-          driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+  datasource:
+    url: jdbc:mysql://localhost:3306/userdb
+    username: root
+    password: 12345678
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  
