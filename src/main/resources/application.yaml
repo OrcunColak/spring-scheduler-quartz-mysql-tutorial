@@ -1,0 +1,13 @@
+spring:
+  quartz:
+    job-store-type: jdbc
+#    initialize-schema: never
+    initialize-schema: always
+
+quartz:
+  properties:
+    org:
+      quartz:
+        jobStore:
+          class: org.quartz.impl.jdbcjobstore.JobStoreTX
+          driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
