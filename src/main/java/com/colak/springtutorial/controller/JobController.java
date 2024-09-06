@@ -22,28 +22,38 @@ import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 @RequiredArgsConstructor
 public class JobController {
 
+    // This is a quartz Scheduler
     private final Scheduler scheduler;
 
     // http://localhost:8080/job/start
     @GetMapping(path = "/start")
     String startJob() throws SchedulerException {
-        JobDataMap jobDataMap = new JobDataMap();
-        jobDataMap.put("jobID", "Job-1");
+        JobDetail job = createJob();
 
-        JobDetail job = JobBuilder.newJob(MyJobExecutor.class)
-                .withIdentity("jobIdentity-1")
-                .usingJobData(jobDataMap)
-                .build();
+        Trigger trigger = createTrigger();
 
-        Trigger trigger = TriggerBuilder.newTrigger()
+        Date date = scheduler.scheduleJob(job, trigger);
+        return "Scheduled Job at " + date;
+    }
+
+    private static Trigger createTrigger() {
+        return TriggerBuilder.newTrigger()
                 .withIdentity("triggerIdentity-1")
                 .startNow()
                 .withSchedule(simpleSchedule()
                         .withIntervalInSeconds(60)
+                        // How many times we want the job to run
                         .withRepeatCount(10))
                 .build();
+    }
 
-        Date date = scheduler.scheduleJob(job, trigger);
-        return "Scheduled Job at " + date;
+    private static JobDetail createJob() {
+        JobDataMap jobDataMap = new JobDataMap();
+        jobDataMap.put("jobID", "Job-1");
+
+        return JobBuilder.newJob(MyJobExecutor.class)
+                .withIdentity("jobIdentity-1")
+                .usingJobData(jobDataMap)
+                .build();
     }
 }
