@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Component
 @Slf4j
-public class MyJobExecutor implements Job {
+public class MyJob implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
