@@ -8,11 +8,27 @@ spring:
     properties:
       org:
         quartz:
+          threadPool:
+            threadCount: 5
+          
+#          jobs:
+#            simpleJob: #Config simple job
+#              jobClass: com.colak.springtutorial.job.MyJob
+#              cron: "*/10 * * * * ?"
+          
+          scheduler:
+            # This gives a name to the Quartz scheduler instance, which can help in identifying it in logs or management interfaces.
+            instanceName: QuartzScheduler
+            #  The AUTO value indicates that Quartz should automatically generate an instance ID.
+            instanceId: AUTO
+            
           jobStore:
+            # When set to true, this tells Quartz to use the configuration properties defined in this YAML file.
+            useProperties: true
             dataSource: quartzDataSource
             tablePrefix: QRTZ_
-            # In a distributed environment, it’s important to ensure that multiple instances of your application don’t execute the same job concurrently.
-            # Clustering allows Quartz to manage jobs across multiple instances, ensuring only one instance runs a given job at a time.
+            # When set to true, it enables clustering. In a clustered setup, multiple instances of the application can share the same job store,
+            # ensuring that only one instance executes a job at a time. This is crucial in distributed systems to avoid duplicate job execution.
             isClustered: true
 
   datasource:
